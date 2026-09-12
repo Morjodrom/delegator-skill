@@ -1,0 +1,7 @@
+interface:
+  display_name: "Delegator"
+  short_description: "Coordinate efficient Codex subagents"
+  default_prompt: "Use $delegator to decide whether this task should be delegated and coordinate the smallest effective set of Codex subagents."
+
+policy:
+  allow_implicit_invocation: false
