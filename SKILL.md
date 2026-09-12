@@ -24,6 +24,17 @@ Delegate only when the user requires it, when substantial investigation should b
 
 Use no more than three active subagents by default. Increase this only at the user's request or when every additional workstream is independently useful and totally disjoint.
 
+### Announce the delegation plan
+
+Before spawning any subagent, briefly explain the delegation plan to the user. For each planned subagent, state:
+
+- its task name or role;
+- its assigned work and read/write scope;
+- its model and reasoning effort;
+- whether it runs sequentially or in parallel, with a brief reason for that ordering.
+
+Runtime agent IDs do not exist until spawn, so the pre-dispatch explanation identifies agents by planned task name or role. If the plan changes after dispatch, disclose the revised assignment and model choice before spawning any replacement or additional subagent.
+
 ## 2. Use Codex subagents
 
 Do not depend on personal custom agents. Use the standard subagent capability exposed by the current Codex surface. When that surface supports selecting named built-ins, use `explorer` for read-only discovery, `worker` for implementation and fixes, and `default` only when neither role fits. When it does not expose role selection, state the role and read/write boundary in the task contract instead of inventing a custom agent.
@@ -32,22 +43,25 @@ Keep final integration ownership in the main session.
 
 Do not dispatch a subagent under permissions that make its implementation or validation knowingly impossible.
 
-## 3. Select model and reasoning explicitly
+## 3. Prefer Luna and escalate deliberately
 
 Inspect the models and reasoning levels available in the current Codex runtime. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
 
-Honor an exact user selection. If unavailable, report it instead of silently substituting another model.
+Honor an exact user selection as an override. If the selected model or reasoning level is unavailable, explain the limitation and proposed substitution before dispatch; never substitute silently.
 
 Personal defaults when available:
 
 | Work | Model | Reasoning |
 |---|---|---|
-| Read-only exploration or log analysis | `gpt-5.6-luna` | `medium` |
-| Normal implementation with clear criteria | `gpt-5.6-terra` | `medium` |
-| Complex lifecycle, concurrency, architecture, or failed-design recovery | `gpt-5.6-sol` | `high` |
-| Independent high-risk analysis when requested | `gpt-5.6-terra` or `gpt-5.6-sol` | `high` |
+| Exploration, log analysis, routine implementation, focused fixes, and scoped validation | `gpt-5.6-luna` | `medium` |
+| Broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
+| Rare, unusually difficult planning or architectural analysis | `gpt-5.6-sol` | `high` |
 
-Use Astra only when available and the work genuinely needs the strongest multi-step or cross-tool judgment. Use `xhigh`, `max`, or `ultra` only when supported and justified by concrete difficulty. Improve a vague contract instead of compensating with more reasoning. If the user did not require a model and a default is unavailable, choose the nearest role-equivalent and disclose it.
+Luna is the default, including for ordinary coding. Choose Terra proactively when concrete complexity, breadth, or risk makes Luna unsuitable; a failed Luna attempt is sufficient but not required. Whenever choosing Terra instead of Luna, state the specific reason in the pre-dispatch explanation.
+
+Do not use Sol for ordinary implementation, debugging, exploration, or validation. Reserve it for rare planning or architectural-analysis assignments whose ambiguity and impact justify the additional capability, and state that justification before dispatch. An explicit user model choice may override these defaults.
+
+Use Astra only when the user explicitly selects it. Use `xhigh`, `max`, or `ultra` only when supported and justified by concrete difficulty. Improve a vague contract instead of compensating with more reasoning. If the user did not require a model and a default is unavailable, choose the nearest role-equivalent and disclose the substitution before dispatch.
 
 ## 4. Prove parallel work is totally disjoint
 
