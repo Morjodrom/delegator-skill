@@ -117,4 +117,10 @@ Subagent completion is evidence, not approval. The coordinator must review the c
 
 Finish with agents used, effective model and reasoning, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty.
 
-When the user requests token or delegation-efficiency analysis, read [efficiency auditing](references/efficiency-audit.md).
+## 9. Offer a token report
+
+As each subagent completes, retain any token-usage counters surfaced by the runtime together with its effective model and context class. Before the final response, retain the equivalent surfaced snapshot for the main session when available. This is lightweight bookkeeping: do not inspect local session records or calculate costs at this stage.
+
+At the end of every completed Delegator run, ask whether the user wants a brief token-consumption and relative-cost report for the main session and each subagent. If the user already opted in, generate it without asking again.
+
+Keep report generation lazy: do not read the reporting instructions, inspect additional usage records, or calculate costs until the user consents. After consent, read [efficiency auditing](references/efficiency-audit.md), combine the retained snapshots with any usage evidence still surfaced by the runtime, and clearly mark unavailable values rather than estimating token counts.
