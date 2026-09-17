@@ -7,11 +7,14 @@ Read this reference only after the user requests token consumption, agent effici
 Use evidence in this order:
 
 1. Usage snapshots retained from runtime metadata as each session completed.
-2. Usage information still exposed directly by the current Codex interface or tools.
-3. Subagent completion metadata and thread summaries.
-4. Local session records only when the user explicitly wants forensic accounting, permissions allow access, and no stable surfaced metric answers the question.
+2. Preconfigured OpenTelemetry records supplied by the user or available from readable collector storage.
+3. Usage information still exposed directly by the current Codex interface or tools.
+4. Subagent completion metadata and thread summaries.
+5. Local session records only when the user explicitly wants forensic accounting, permissions allow access, and no stable surfaced metric answers the question.
 
 Do not present internal database fields or rollout formats as stable Codex APIs. State the source, timestamp, and limitations of every usage figure.
+
+OpenTelemetry identifies conversations and records model and token data, but desktop subagent attribution is not guaranteed. Correlate only when conversation identifiers and timestamps support it; otherwise report aggregate or unattributed usage. Telemetry cannot be enabled retroactively for a completed run. Because export is asynchronous, treat missing recent events as pending or unavailable rather than zero and do not claim completeness.
 
 ## Per-session record
 
