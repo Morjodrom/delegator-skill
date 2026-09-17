@@ -116,13 +116,3 @@ Allow one correction turn after a major criterion is missed. If the corrected re
 Subagent completion is evidence, not approval. The coordinator must review the combined diff and high-risk paths, verify every acceptance and negative constraint, check cross-boundary composition, and run repository-required integrated type checks, lint, tests, and builds. Run deterministic checks before credentialed, external, or flaky E2E checks. Do not rerun an unchanged external test without evidence of a transient failure.
 
 Finish with agents used, effective model and reasoning, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty.
-
-## 9. Offer a token report
-
-No prompt or command can retroactively enable token telemetry for a completed run. As each subagent completes, retain any token-usage counters surfaced by the runtime together with its effective model and context class. Before the final response, retain the equivalent surfaced snapshot for the main session when available. This is lightweight bookkeeping: do not inspect additional records or calculate costs at this stage.
-
-Durable desktop accounting requires Codex OpenTelemetry export to have been configured before the run and its collector output to be readable later. Do not edit user configuration or start a collector unless the user explicitly asks. For setup or troubleshooting, read [telemetry setup](references/telemetry-setup.md).
-
-At the end of every completed Delegator run, ask whether the user wants a brief token-consumption and relative-cost report for the main session and each subagent. If the user already opted in, generate it without asking again.
-
-Keep report generation lazy: do not read the reporting instructions, query collector output or other usage records, or calculate costs until the user consents. After consent, read [efficiency auditing](references/efficiency-audit.md), combine the retained snapshots with available exported usage evidence, and clearly mark unavailable values rather than estimating token counts.

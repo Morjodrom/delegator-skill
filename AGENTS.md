@@ -6,7 +6,7 @@ This repository contains the `delegator` Codex skill. Its source is intentionall
 
 - `skill/SKILL.md` is the canonical skill definition, including the delegation workflow and agent contract.
 - `skill/agents/openai.yaml` supplies the Codex-facing display name and default prompt.
-- `skill/references/` holds optional supporting guidance. For example, `efficiency-audit.md` is read only for token-usage or orchestration retrospectives.
+- `skill/references/` holds optional supporting guidance when a conditional workflow needs more detail.
 
 Keep workflow rules in `SKILL.md`; put detailed, conditional material in a focused file under `skill/references/` and link to it from the skill.
 
