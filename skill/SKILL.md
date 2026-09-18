@@ -43,7 +43,7 @@ Keep final integration ownership in the main session.
 
 Do not dispatch a subagent under permissions that make its implementation or validation knowingly impossible.
 
-## 3. Prefer Luna and escalate deliberately
+## 3. Prefer Terra by default and use Luna for simple work
 
 Inspect the models and reasoning levels available in the current Codex runtime. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
 
@@ -53,11 +53,11 @@ Personal defaults when available:
 
 | Work | Model | Reasoning |
 |---|---|---|
-| Exploration, log analysis, routine implementation, focused fixes, and scoped validation | `gpt-5.6-luna` | `medium` |
-| Broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
+| Simple, narrow, low-risk exploration, log analysis, implementation, fixes, and scoped validation | `gpt-5.6-luna` | `medium` |
+| Default subagent work, including routine implementation; also broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
 | Rare, unusually difficult planning or architectural analysis | `gpt-5.6-sol` | `high` |
 
-Luna is the default, including for ordinary coding. Choose Terra proactively when concrete complexity, breadth, or risk makes Luna unsuitable; a failed Luna attempt is sufficient but not required. Whenever choosing Terra instead of Luna, state the specific reason in the pre-dispatch explanation.
+Terra is the default. Use Luna instead when the assignment is clearly simple, narrow, and low risk. Choose Terra when any material complexity, breadth, ambiguity, or risk makes Luna unsuitable; a failed Luna attempt is sufficient but not required. Whenever choosing Terra instead of Luna, state the specific reason in the pre-dispatch explanation and repeat that reason in the final report alongside the effective model and reasoning effort.
 
 Do not use Sol for ordinary implementation, debugging, exploration, or validation. Reserve it for rare planning or architectural-analysis assignments whose ambiguity and impact justify the additional capability, and state that justification before dispatch. An explicit user model choice may override these defaults.
 
@@ -115,4 +115,4 @@ Allow one correction turn after a major criterion is missed. If the corrected re
 
 Subagent completion is evidence, not approval. The coordinator must review the combined diff and high-risk paths, verify every acceptance and negative constraint, check cross-boundary composition, and run repository-required integrated type checks, lint, tests, and builds. Run deterministic checks before credentialed, external, or flaky E2E checks. Do not rerun an unchanged external test without evidence of a transient failure.
 
-Finish with agents used, effective model and reasoning, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty.
+Finish with agents used, effective model and reasoning, model-selection rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. For every Terra agent, explicitly explain why the assignment was not simple enough for Luna.
