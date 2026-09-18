@@ -54,10 +54,10 @@ Personal defaults when available:
 | Work | Model | Reasoning |
 |---|---|---|
 | Simple, narrow, low-risk exploration, log analysis, implementation, fixes, and scoped validation | `gpt-5.6-luna` | `medium` |
-| Default subagent work, including routine implementation; also broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
+| Default eligible non-simple subagent work: broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
 | Rare, unusually difficult planning or architectural analysis | `gpt-5.6-sol` | `high` |
 
-Terra is the default. Use Luna instead when the assignment is clearly simple, narrow, and low risk. Choose Terra when any material complexity, breadth, ambiguity, or risk makes Luna unsuitable; a failed Luna attempt is sufficient but not required. Whenever choosing Terra instead of Luna, state the specific reason in the pre-dispatch explanation and repeat that reason in the final report alongside the effective model and reasoning effort.
+Terra is the default for assignments that are demonstrably unsuitable for Luna. Use Luna when the assignment is simple, narrow, and low risk, or whenever there is no concrete evidence that Luna is inadequate. Choose Terra only when material complexity, breadth, ambiguity, or risk rules Luna out; a failed Luna attempt is sufficient but not required evidence. Before dispatch, state the observable task characteristics that disqualify Luna rather than merely labeling the work complex or risky.
 
 Do not use Sol for ordinary implementation, debugging, exploration, or validation. Reserve it for rare planning or architectural-analysis assignments whose ambiguity and impact justify the additional capability, and state that justification before dispatch. An explicit user model choice may override these defaults.
 
@@ -115,4 +115,4 @@ Allow one correction turn after a major criterion is missed. If the corrected re
 
 Subagent completion is evidence, not approval. The coordinator must review the combined diff and high-risk paths, verify every acceptance and negative constraint, check cross-boundary composition, and run repository-required integrated type checks, lint, tests, and builds. Run deterministic checks before credentialed, external, or flaky E2E checks. Do not rerun an unchanged external test without evidence of a transient failure.
 
-Finish with agents used, effective model and reasoning, model-selection rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. For every Terra agent, explicitly explain why the assignment was not simple enough for Luna.
+Finish with agents used, effective model and reasoning, model-selection rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. For every Terra agent, prove that Luna was not a viable option by citing concrete characteristics or evidence from the assignment. A generic claim that the work was complex, broad, or risky is insufficient. If the report cannot establish why Luna was unsuitable, use Luna instead.
