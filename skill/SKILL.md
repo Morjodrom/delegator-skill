@@ -45,7 +45,7 @@ Do not dispatch a subagent under permissions that make its implementation or val
 
 ## 3. Prefer Terra by default and use Luna for simple work
 
-Inspect the models and reasoning levels available in the current Codex runtime. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
+Inspect the models and reasoning levels available in the current Codex runtime. Treat Luna, Terra, Sol, and Astra as model families; use the available model ID for the selected family rather than assuming a version. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
 
 Honor an exact user selection as an override. If the selected model or reasoning level is unavailable, explain the limitation and proposed substitution before dispatch; never substitute silently.
 
@@ -53,9 +53,9 @@ Personal defaults when available:
 
 | Work | Model | Reasoning |
 |---|---|---|
-| Simple, narrow, low-risk exploration, log analysis, implementation, fixes, and scoped validation | `gpt-5.6-luna` | `medium` |
-| Default eligible non-simple subagent work: writes to multiple connected files, broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | `gpt-5.6-terra` | `medium` or `high` |
-| Rare, unusually difficult planning or architectural analysis | `gpt-5.6-sol` | `high` |
+| Simple, narrow, low-risk exploration, log analysis, implementation, fixes, and scoped validation | Luna | `medium` |
+| Default eligible non-simple subagent work: writes to multiple connected files, broad or high-risk implementation, complex debugging, concurrency, cross-boundary changes, or recovery after a failed Luna attempt | Terra | `medium` or `high` |
+| Rare, unusually difficult planning or architectural analysis | Sol | `high` |
 
 Any subagent assignment that requires writes to multiple connected files must use at least Terra. Files are connected when one change depends on, configures, registers, tests, documents, generates, or consumes another change in the same assignment. Merely writing several independent files does not satisfy this rule. Before dispatch, name the connected files or file roles and explain the dependency between their changes; this is the required proof for the model floor. Repeat that proof in the final report. If the connection cannot be demonstrated, do not use this rule as justification for Terra.
 
