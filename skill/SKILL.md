@@ -5,9 +5,9 @@ description: Coordinate explicitly requested Codex subagents with strict disjoin
 
 # Delegator
 
-Coordinate the smallest effective set of Codex subagents. The user's explicit instructions override this skill, including whether to delegate, agent count, model, reasoning effort, ownership, sequence, and validation.
+Coordinate the smallest effective set of Codex subagents while balancing result quality and total priced-token cost. The user's explicit instructions override this skill, including whether to delegate, agent count, model, reasoning effort, ownership, sequence, and validation.
 
-This skill is explicit-only. Invocation starts with a delegation decision; it does not imply delegation is worthwhile. If the user requires subagents, delegate. Otherwise, keep the task in the main session when coordination and repeated context cost more than the expected benefit. Do not delegate trivial edits, formatting, imports, or small fixes.
+This skill is explicit-only. Invocation starts with a delegation decision; it does not imply delegation is worthwhile. If the user requires subagents, delegate. Otherwise, compare the quality and expected total priced-token cost of completing the task in the main session with a delegated workflow. Delegate only when a credible quality improvement or cost saving justifies the added coordination; keep the task in the main session when neither benefit is clear. Do not delegate trivial edits, formatting, imports, or small fixes.
 
 Use Codex subagents for work owned by the current request. Do not create user-visible tasks or threads unless the user explicitly asks for separate tasks.
 
@@ -20,7 +20,7 @@ Before dispatch:
 - Identify shared interfaces, generated files, lockfiles, fixtures, servers, databases, build outputs, and mutable test resources.
 - Check the parent permission and sandbox mode; subagents inherit these unless the runtime supports an override.
 
-Delegate only when the user requires it, when substantial investigation should be isolated from implementation context, when risky implementation benefits from separate ownership, or when substantial workstreams are totally disjoint.
+Delegate only when the user requires it or one of these conditions offers a credible quality or cost benefit: substantial investigation should be isolated from implementation context, risky implementation benefits from separate ownership, or substantial workstreams are totally disjoint. Estimate the entire workflow, not just subagent work: parent coordination, repeated context, subagent output, validation, integration, and likely retries. Use the [token-cost guide](references/token-cost.md) for the relative model rates and comparison. Treat a likely retry or quality failure as a cost, not as a reason to choose a cheaper model.
 
 Use no more than three active subagents by default. Increase this only at the user's request or when every additional workstream is independently useful and totally disjoint.
 
@@ -31,6 +31,7 @@ Before spawning any subagent, briefly explain the delegation plan to the user. F
 - its task name or role;
 - its assigned work and read/write scope;
 - its model and reasoning effort;
+- why that model is suitable for the task's quality requirements and how delegation is expected to improve quality or total cost;
 - whether it runs sequentially or in parallel, with a brief reason for that ordering.
 
 Runtime agent IDs do not exist until spawn, so the pre-dispatch explanation identifies agents by planned task name or role. If the plan changes after dispatch, disclose the revised assignment and model choice before spawning any replacement or additional subagent.
@@ -43,11 +44,13 @@ Keep final integration ownership in the main session.
 
 Do not dispatch a subagent under permissions that make its implementation or validation knowingly impossible.
 
-## 3. Prefer Terra by default and use Luna for simple work
+## 3. Meet quality requirements, then control token cost
 
 Inspect the models and reasoning levels available in the current Codex runtime. Treat Luna, Terra, Sol, and Astra as model families; use the available model ID for the selected family rather than assuming a version. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
 
 Honor an exact user selection as an override. If the selected model or reasoning level is unavailable, explain the limitation and proposed substitution before dispatch; never substitute silently.
+
+First determine which models can reasonably meet the assignment's quality and validation requirements. Among suitable models, choose the one with the lowest expected *total priced-token cost*, including likely retries and parent integration. Do not select Luna merely because its tokens are cheaper, or use Terra or Sol when the assignment gives no concrete reason to expect a quality or total-cost benefit. Keep prompts, repeated context, and completion packets compact without omitting information needed for correctness.
 
 Personal defaults when available:
 
@@ -117,4 +120,4 @@ Allow one correction turn after a major criterion is missed. If the corrected re
 
 Subagent completion is evidence, not approval. The coordinator must review the combined diff and high-risk paths, verify every acceptance and negative constraint, check cross-boundary composition, and run repository-required integrated type checks, lint, tests, and builds. Run deterministic checks before credentialed, external, or flaky E2E checks. Do not rerun an unchanged external test without evidence of a transient failure.
 
-Finish with agents used, effective model and reasoning, model-selection rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. For every Terra agent, prove that Luna was not a viable option by citing concrete characteristics or evidence from the assignment. When the multiple-connected-files rule applies, name the files or file roles and the dependency connecting their required writes. A generic claim that the work was complex, broad, or risky is insufficient. If the report cannot establish why Luna was unsuitable, use Luna instead.
+Finish with agents used, effective model and reasoning, model-selection and delegation rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. Explain the expected quality or total-cost benefit of delegation; distinguish estimates from measured token usage when available. For every Terra agent, prove that Luna was not a suitable option by citing concrete quality, retry-risk, or total-cost evidence from the assignment. When the multiple-connected-files rule applies, name the files or file roles and the dependency connecting their required writes. A generic claim that the work was complex, broad, or risky is insufficient. If the report cannot establish why Luna was unsuitable, use Luna instead.
