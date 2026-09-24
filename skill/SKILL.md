@@ -9,6 +9,8 @@ Coordinate the smallest effective set of Codex subagents while balancing result 
 
 This skill is explicit-only. Invocation starts with a delegation decision; it does not imply delegation is worthwhile. If the user requires subagents, delegate. Otherwise, compare the quality and expected total priced-token cost of completing the task in the main session with a delegated workflow. Delegate only when a credible quality improvement or cost saving justifies the added coordination; keep the task in the main session when neither benefit is clear. Do not delegate trivial edits, formatting, imports, or small fixes.
 
+If the user invoked this skill but delegation is not warranted, tell them before continuing, in one short sentence, that no subagents will be used and why.
+
 Use Codex subagents for work owned by the current request. Do not create user-visible tasks or threads unless the user explicitly asks for separate tasks.
 
 ## 1. Preflight and decomposition
