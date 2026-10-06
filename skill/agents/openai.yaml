@@ -1,7 +1,7 @@
 interface:
   display_name: "Delegator"
-  short_description: "Coordinate quality-aware, token-efficient Codex subagents"
-  default_prompt: "Use $delegator to decide whether delegation improves quality or total token cost, then coordinate the smallest effective set of Codex subagents."
+  short_description: "Coordinate quality-aware Codex subagents"
+  default_prompt: "Use $delegator to decide whether delegation improves quality, then coordinate the smallest effective set of Codex subagents."
 
 policy:
   allow_implicit_invocation: false
