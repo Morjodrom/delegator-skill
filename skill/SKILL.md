@@ -32,7 +32,7 @@ Before spawning any subagent, briefly explain the delegation plan to the user. F
 
 - its task name or role;
 - its assigned work and read/write scope;
-- its model and reasoning effort;
+- its model, reasoning effort, and context mode;
 - why that model is suitable for the task's quality requirements and how delegation is expected to improve quality;
 - whether it runs sequentially or in parallel, with a brief reason for that ordering.
 
@@ -42,17 +42,27 @@ Runtime agent IDs do not exist until spawn, so the pre-dispatch explanation iden
 
 Do not depend on personal custom agents. Use the standard subagent capability exposed by the current Codex surface. When that surface supports selecting named built-ins, use `explorer` for read-only discovery, `worker` for implementation and fixes, and `default` only when neither role fits. When it does not expose role selection, state the role and read/write boundary in the task contract instead of inventing a custom agent.
 
-Keep final integration ownership in the main session.
+Keep final integration ownership in the main session. Prefer Sol as the orchestrator and Luna/Terra as workers, subject to the user's selection and runtime availability. This preference does not authorize silently changing the main session model.
 
 Do not dispatch a subagent under permissions that make its implementation or validation knowingly impossible.
 
+### Choose context deliberately
+
+Inspect the current spawn interface; do not assume context controls are identical across Codex surfaces. When `fork_turns` is exposed, set it explicitly to `"none"` by default, especially for Sol-to-Luna/Terra delegation. A compact task message does not prevent automatic full-history inheritance when the parameter is omitted.
+
+For fresh-context workers, make the contract in section 5 self-contained. Fresh conversation context does not imply removal of runtime instructions, tools, permissions, or workspace access.
+
+Use `fork_turns="all"` only when conversational nuance materially affects correctness and a compact handoff would be inadequate. Explain the quality benefit and expected context overhead before dispatch. If the runtime prohibits model/effort overrides for full-history forks, omit those overrides and disclose the inherited settings as an exception to the explicit-settings rule below. If those settings conflict with the user's required worker model, use `"none"` with a sufficient handoff instead; do not silently substitute models.
+
+Do not invent partial-history selectors or context-token limits absent from the current interface.
+
 ## 3. Select models for quality requirements
 
-Inspect the models and reasoning levels available in the current Codex runtime. Treat Luna, Terra, Sol, and Astra as model families; use the available model ID for the selected family rather than assuming a version. Set both model and reasoning effort explicitly for every spawn; do not rely on parent inheritance. Verify effective settings after spawn when Codex exposes them.
+Inspect the models and reasoning levels available in the current Codex runtime. Treat Luna, Terra, Sol, and Astra as model families; use the available model ID for the selected family rather than assuming a version. Set both model and reasoning effort explicitly, except for the runtime-required full-history inheritance described above. Verify effective settings after spawn when Codex exposes them.
 
 Honor an exact user selection as an override. If the selected model or reasoning level is unavailable, explain the limitation and proposed substitution before dispatch; never substitute silently.
 
-Choose a model that can reasonably meet the assignment's quality and validation requirements. Use Terra or Sol only when the assignment gives a concrete reason to expect a quality benefit over Luna. Keep prompts, repeated context, and completion packets compact without omitting information needed for correctness.
+Choose a model that can reasonably meet the assignment's quality and validation requirements. Use Terra or Sol only when the assignment gives a concrete reason to expect a quality benefit over Luna.
 
 Personal defaults when available:
 
@@ -96,13 +106,13 @@ Return:
 ```
 
 - **Goal:** one observable result.
-- **Context:** only relevant paths, behavior, project rules, and prior decisions.
+- **Context:** relevant requirements, paths, behavior, project rules, prior decisions, and evidence locations.
 - **Scope:** owned files or subsystem and whether editing is allowed.
 - **Negative constraints:** forbidden changes, abstractions, dependencies, files, and behavior.
 - **Done when:** measurable acceptance criteria and required validation.
 - **Return:** changed files, criteria checklist, exact commands and results, unverified items, and residual risks.
 
-Do not paste the full conversation or large documents when paths and a short summary suffice. Do not ask a subagent to improve unrelated code.
+Keep contracts and completion packets compact without omitting correctness-critical information. Prefer precise paths and a short summary over copied conversations or large documents; include essential facts directly when rediscovery would be costly or unreliable. Do not ask a subagent to improve unrelated code.
 
 ## 6. Let subagents validate their scope
 
@@ -114,12 +124,20 @@ A subagent must not validate against another active writer's incomplete changes.
 
 ## 7. Coordinate and remediate
 
-Use Codex's native wait mechanism instead of repeated polling. Wait for all agents needed by the next dependency gate. Request concise completion packets, steer only when new information materially changes a contract, and stop obsolete or incorrectly scoped work.
+Use Codex's native wait mechanism instead of repeated polling. Wait for all agents needed by the next dependency gate. Steer only when new information materially changes a contract, and stop obsolete or incorrectly scoped work.
 
 Allow one correction turn after a major criterion is missed. If the corrected result still violates a major criterion, stop that agent for the workstream. The coordinator then fixes it directly or rewrites the contract before a fresh dispatch. Keep mechanical integration fixes in the main session unless the user assigned all edits to subagents.
+
+### Reuse workers and control total cost
+
+Continue an existing worker for closely related follow-ups when its accumulated context remains useful; send only changed requirements or new evidence. Start fresh for unrelated work, stale assumptions, or context pollution. Do not repeatedly spawn workers to rediscover the same facts, and do not keep an unsuitable worker merely to pursue caching.
+
+Keep reusable instructions, reference material, and tool configuration stable where controllable, with changing assignments after the stable prefix. Prompt-cache reuse depends on matching rendered prefixes and compatible settings; neither forks nor continued workers guarantee cache hits. Do not assume a Sol cache transfers to Terra/Luna. Use cache controls or usage counters only when the runtime actually exposes them; never claim measured savings without evidence.
+
+Optimize cost per accepted result, including orchestrator input, worker input and generation, coordination, validation, and retries—not token count or cache-hit percentage alone. Do not pad prompts to reach cache thresholds. When telemetry is available, use total cost/usage, cached and uncached input, latency, acceptance, and repair work to refine routing. Preserve validation requirements regardless of caching.
 
 ## 8. Review total integration
 
 Subagent completion is evidence, not approval. The coordinator must review the combined diff and high-risk paths, verify every acceptance and negative constraint, check cross-boundary composition, and run repository-required integrated type checks, lint, tests, and builds. Run deterministic checks before credentialed, external, or flaky E2E checks. Do not rerun an unchanged external test without evidence of a transient failure.
 
-Finish with agents used, effective model and reasoning, model-selection and delegation rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. Explain the expected quality benefit of delegation. For every Terra agent, prove that Luna was not a suitable option by citing concrete quality or retry-risk evidence from the assignment. When the multiple-connected-files rule applies, name the files or file roles and the dependency connecting their required writes. A generic claim that the work was complex, broad, or risky is insufficient. If the report cannot establish why Luna was unsuitable, use Luna instead.
+Finish with agents used, effective model and reasoning, context modes and any inheritance exceptions, model-selection and delegation rationale, owned scopes, proof of any parallel disjointness, subagent validation, coordinator integration checks, and remaining uncertainty. Explain the expected quality benefit of delegation. For every Terra agent, prove that Luna was not a suitable option by citing concrete quality or retry-risk evidence from the assignment. When the multiple-connected-files rule applies, name the files or file roles and the dependency connecting their required writes. A generic claim that the work was complex, broad, or risky is insufficient. If the report cannot establish why Luna was unsuitable, use Luna instead.
